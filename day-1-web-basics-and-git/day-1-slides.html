@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 1: Web Basics and Git</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --paper: #fbf8f1;
+  --paper-deep: #f6f1e7;
+  --cream: #efe7d7;
+  --rule: #e3d8c2;
+  --ink: #10213f;
+  --ink-body: #141b2a;
+  --ink-deep: #0c1830;
+  --navy-700: #1a2f55;
+  --navy-500: #2e4a7a;
+  --slate: #4a5468;
+  --muted: #646874;
+  --mist: #b9c2d6;
+  --gold: #c29b3c;
+  --gold-deep: #8b691c;
+  --gold-light: #ddbe72;
+  --code-text: #ece6d8;
+  --code-dim: #8e99b0;
+}
+
+body { font-family: 'DM Sans', Arial, sans-serif; color: #141b2a; }
+
+section {
+  background: var(--paper);
+  color: var(--ink-body);
+  padding: 128px 128px 160px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+section.dark { background: var(--ink-deep); color: var(--mist); }
+
+/* Headings and text */
+.kicker {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 24px;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin: 0 0 16px;
+}
+.dark .kicker { color: var(--gold-light); }
+
+.title {
+  font-family: Gloock, Georgia, serif;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 48px;
+}
+.dark .title { color: var(--paper); }
+
+.lede { font-size: 32px; line-height: 1.45; color: var(--slate); margin: 0 0 40px; max-width: 1400px; }
+.dark .lede { color: var(--mist); }
+.lede-end { font-size: 30px; line-height: 1.45; color: var(--slate); margin: 40px 0 0; max-width: 1500px; }
+.dark .lede-end { color: var(--mist); }
+
+.text { font-size: 28px; line-height: 1.5; color: var(--slate); margin: 0; }
+.dark .text { color: var(--mist); }
+.text-h { font-family: Gloock, Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.2; color: var(--ink); margin: 0; }
+.dark .text-h { color: var(--paper); }
+
+.statement { font-family: Gloock, Georgia, serif; font-weight: 400; font-size: 96px; line-height: 1.08; color: var(--ink); margin: 0; max-width: 1500px; }
+.dark .statement { color: var(--paper); }
+
+.gold-rule { width: 160px; height: 4px; background: var(--gold); border-radius: 2px; }
+
+/* Footer band */
+.foot {
+  position: absolute;
+  left: 128px;
+  bottom: 64px;
+  width: 1664px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.foot-t {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 24px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0;
+}
+.dark .foot-t { color: var(--mist); }
+
+/* Layout helpers */
+.grid { display: grid; gap: 32px; }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.split { display: flex; gap: 64px; align-items: flex-start; }
+.col { display: flex; flex-direction: column; gap: 28px; }
+.grow { flex: 1; }
+
+/* Cards */
+.card {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 36px 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.card-k { font-family: 'DM Mono', 'Courier New', monospace; font-size: 24px; line-height: 1.3; letter-spacing: 0.08em; color: var(--gold-deep); margin: 0; }
+.card-h { font-family: Gloock, Georgia, serif; font-weight: 400; font-size: 40px; line-height: 1.15; color: var(--ink); margin: 0; }
+.card-p { font-size: 26px; line-height: 1.45; color: var(--slate); margin: 0; }
+.dark .card { background: var(--navy-700); border-color: var(--navy-500); }
+.dark .card-k { color: var(--gold-light); }
+.dark .card-h { color: var(--paper); }
+.dark .card-p { color: var(--mist); }
+
+/* Code blocks */
+.code { background: var(--ink-deep); border-radius: 12px; padding: 32px 40px; box-sizing: border-box; }
+.code-l { font-family: 'DM Mono', 'Courier New', monospace; font-size: 24px; line-height: 1.5; color: var(--code-text); margin: 0; }
+.code-big { font-size: 30px; line-height: 1.6; }
+.c-t { color: var(--gold-light); }
+.c-a { color: var(--mist); }
+.c-c { color: var(--code-dim); }
+.dark .code { background: #08111f; border: 1px solid var(--navy-500); }
+.file-k { font-family: 'DM Mono', 'Courier New', monospace; font-size: 24px; color: var(--gold-deep); margin: 0 0 12px; letter-spacing: 0.06em; }
+
+/* Anatomy chips */
+.chips { display: flex; gap: 24px; align-items: flex-start; }
+.chip-col { display: flex; flex-direction: column; gap: 20px; }
+.chip {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 40px;
+  line-height: 1.3;
+  color: var(--paper);
+  background: var(--ink-deep);
+  border-radius: 10px;
+  padding: 20px 28px;
+  margin: 0;
+  white-space: nowrap;
+}
+.chip-soft { background: var(--cream); color: var(--ink); }
+.chip-label { border-top: 4px solid var(--gold); padding-top: 16px; font-size: 26px; line-height: 1.4; color: var(--slate); margin: 0; }
+.chip-label-b { color: var(--ink); font-weight: 600; }
+
+/* Flow diagrams */
+.flow { display: flex; align-items: stretch; gap: 16px; }
+.node { flex: 1; padding: 32px 28px; }
+.node .card-h { font-size: 34px; }
+.arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+.arr { width: 56px; height: 28px; background: var(--gold); }
+.arrow-l { font-family: 'DM Mono', 'Courier New', monospace; font-size: 24px; color: var(--gold-deep); margin: 0; white-space: nowrap; }
+
+/* Tables */
+.tbl { width: 100%; font-family: 'DM Sans', Arial, sans-serif; font-size: 28px; color: var(--ink-body); }
+.tbl-s { font-size: 26px; }
+.tbl-head { background: var(--cream); }
+.tc { color: var(--gold-deep); }
+
+/* Badges */
+.badge {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 24px;
+  line-height: 1.2;
+  background: var(--gold);
+  color: var(--ink-deep);
+  border-radius: 20px;
+  padding: 6px 16px;
+  margin: 0;
+  align-self: flex-start;
+}
+
+/* VS Code mock */
+.vs { display: flex; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; height: 600px; width: 1040px; }
+.vs-bar { width: 88px; background: var(--ink); display: flex; flex-direction: column; align-items: center; gap: 28px; padding-top: 24px; box-sizing: border-box; }
+.vs-icon { width: 36px; height: 36px; color: var(--mist); }
+.vs-side { width: 300px; background: var(--cream); padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; }
+.vs-main { flex: 1; display: flex; flex-direction: column; }
+.vs-editor { flex: 1; background: var(--paper-deep); padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
+.vs-term { height: 190px; background: var(--ink-deep); padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; }
+.vs-file { font-family: 'DM Mono', 'Courier New', monospace; font-size: 24px; color: var(--ink); margin: 0; }
+.vs-code { font-family: 'DM Mono', 'Courier New', monospace; font-size: 24px; line-height: 1.5; color: var(--ink); margin: 0; }
+.legend { display: flex; flex-direction: column; gap: 28px; flex: 1; }
+.legend-row { display: flex; gap: 20px; align-items: flex-start; }
+
+/* Mock profile page */
+.mock { background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 12px; padding: 48px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.mock-photo { width: 140px; height: 140px; background: var(--cream); border: 2px solid var(--rule); }
+.mock-name { font-family: Georgia, serif; font-size: 48px; color: var(--ink-body); margin: 0; text-align: center; }
+.mock-tag { font-family: Georgia, serif; font-size: 28px; color: var(--slate); margin: 0; text-align: center; }
+.mock-link { font-family: Georgia, serif; font-size: 26px; color: var(--ink); margin: 0; text-decoration: underline; }
+
+/* Checklist */
+.check-row { display: flex; gap: 20px; align-items: center; }
+.check-i { width: 40px; height: 40px; color: var(--gold-deep); }
+
+/* Motion */
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+.in { animation: rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i) * 120ms); }
+
+/* ---- standalone viewer ---- */
+html, body { margin: 0; height: 100%; background: #0c1830; overflow: hidden; }
+#stage { position: absolute; top: 50%; left: 50%; width: 1920px; height: 1080px; transform-origin: 0 0; }
+#stage > section { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: none; }
+#stage > section.on { display: flex; }
+section aside { display: none; }
+body.notes section.on aside { display: block; position: absolute; left: 0; right: 0; bottom: 0; background: rgba(12,24,48,.94); color: #ece6d8; font-size: 26px; line-height: 1.5; padding: 24px 128px; }
+svg.arr { background: none; }
+svg.vs-icon, svg.check-i { flex: none; }
+#hud { position: fixed; right: 16px; bottom: 12px; font: 13px 'DM Mono', monospace; color: #b9c2d6; opacity: .7; }
+</style>
+</head>
+<body>
+<div id="stage">
+<section id="cover" style="justify-content:flex-end;">
+<p class="kicker">Portfolio sessions · Day 1 of 5</p>
+<h1 style="font-family:Gloock, Georgia, serif; font-weight:400; font-size:128px; line-height:1.02; color:#10213f; margin:0 0 32px;">Live on the internet</h1>
+<p class="lede" style="margin:0 0 56px;">Web basics and Git: from an empty folder to your own page at <b>USERNAME.github.io</b>, typed by you.</p>
+<div class="gold-rule"></div>
+<p class="foot-t" style="margin-top:28px;">Sanketana School of Code · with Parul Sharma</p>
+<aside>Welcome. Today’s promise: by the end of the hour Parul has a page she typed herself, live on the internet, from her own first commit. Everything in between serves that goal. Keep theory short; get to the keyboard by minute 40 at the latest.</aside>
+</section>
+<section id="plan">
+<p class="kicker">Today’s hour</p>
+<h2 class="title">Short theory, then your hands on the keyboard</h2>
+<table class="tbl">
+<tr class="tbl-head"><th style="width:14%;">Minutes</th><th style="width:44%;">What we cover</th><th style="width:42%;">What you do</th></tr>
+<tr><td class="tc">0–10</td><td>Warm-up and your site</td><td>Answer four questions</td></tr>
+<tr><td class="tc">10–25</td><td>How a website works, HTML and CSS</td><td>Look inside a real website</td></tr>
+<tr><td class="tc">25–33</td><td>VS Code and the terminal</td><td>Make a folder from the terminal</td></tr>
+<tr><td class="tc">33–42</td><td>Git, GitHub and GitHub Pages</td><td>Set up Git, once</td></tr>
+<tr><td class="tc">42–58</td><td>Exercise: your profile page</td><td>Type it, push it, see it live</td></tr>
+<tr><td class="tc">58–60</td><td>Wrap-up</td><td>Take home the cheat sheet</td></tr>
+</table>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>The timings are tight. If theory runs long, cut the VS Code shortcuts and terminal table to a quick glance: she will learn them by doing them in the exercise. Protect the last 18 minutes for the exercise.</aside>
+</section>
+<section id="questions">
+<p class="kicker">Before anything goes live</p>
+<h2 class="title">Four questions about your site</h2>
+<div class="grid g2" style="grid-template-rows:1fr 1fr; flex:1;">
+<div class="card in" style="--i:0;"><p class="card-k">01 · MESSAGE</p><h3 class="card-h">Your 30 seconds</h3><p class="card-p">What should a conference organiser know about you after 30 seconds on your page?</p></div>
+<div class="card in" style="--i:1;"><p class="card-k">02 · PAGES</p><h3 class="card-h">Which pages</h3><p class="card-p">Home and About, Talks and publications, Writing, Contact. Keep, add or drop?</p></div>
+<div class="card in" style="--i:2;"><p class="card-k">03 · OFF LIMITS</p><h3 class="card-h">What stays off</h3><p class="card-p">Anything that must never appear: employer details, family, clients, location.</p></div>
+<div class="card in" style="--i:3;"><p class="card-k">04 · DATE</p><h3 class="card-h">Any deadline</h3><p class="card-p">Is there a talk, an event or a date this site needs to be ready for?</p></div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>From the intake form: Q2 (30-second message) was incomplete, Q5 (sections) and Q19 (what must stay off) were skipped, and Q20 (deadline) too. Question 3 must be settled today, before anything goes live, because the repo will be public. Write her answers down; they go into her CLAUDE.md later. Keep this to 10 minutes.</aside>
+</section>
+<section id="url-journey">
+<p class="kicker">Anatomy of a website</p>
+<h2 class="title">What happens when someone opens your URL</h2>
+<div class="flow">
+<div class="card node in" style="--i:0;"><p class="card-k">1 · BROWSER</p><h3 class="card-h">You type an address</h3><p class="card-p">parul.github.io goes into Chrome or Safari.</p></div>
+<div class="arrow in" style="--i:1;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg></div>
+<div class="card node in" style="--i:2;"><p class="card-k">2 · DNS</p><h3 class="card-h">The name is looked up</h3><p class="card-p">Like a phone book: the name becomes a server’s number (an IP address).</p></div>
+<div class="arrow in" style="--i:3;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg></div>
+<div class="card node in" style="--i:4;"><p class="card-k">3 · SERVER</p><h3 class="card-h">Files are sent back</h3><p class="card-p">HTML, CSS and images travel over HTTPS, encrypted.</p></div>
+<div class="arrow in" style="--i:5;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg></div>
+<div class="card node in" style="--i:6;"><p class="card-k">4 · PAGE</p><h3 class="card-h">The browser builds it</h3><p class="card-p">It reads the files and paints the page you see.</p></div>
+</div>
+<p class="lede-end">All of this takes well under a second. Words you just met: <b>URL, DNS, IP address, server, HTTPS, browser.</b></p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Ask her first: what do you think happens when you press Enter? Then walk the four steps. Security hook: HTTPS means nobody in between can read or change the files, which matters to her professionally. These are all Term 1 words; we only name them today.</aside>
+</section>
+<section id="three-layers">
+<p class="kicker">Anatomy of a website</p>
+<h2 class="title">Every page speaks three languages</h2>
+<div class="grid g3">
+<div class="card in" style="--i:0;"><p class="card-k">HTML · STRUCTURE</p><h3 class="card-h">The walls and rooms</h3><p class="card-p">What is on the page: headings, paragraphs, images, links.</p></div>
+<div class="card in" style="--i:1;"><p class="card-k">CSS · STYLE</p><h3 class="card-h">The paint and furniture</h3><p class="card-p">How it looks: colours, fonts, spacing, layout.</p></div>
+<div class="card in" style="--i:2;"><p class="card-k">JAVASCRIPT · BEHAVIOUR</p><h3 class="card-h">The electricity</h3><p class="card-p">What reacts: menus, buttons, forms that send messages.</p></div>
+</div>
+<p class="lede-end">Today we use the first two. JavaScript arrives later, with your contact form.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>The house metaphor works well. You can remove the paint (CSS) and the house still stands, just ugly. Show this live later: comment out the stylesheet link and the page still works.</aside>
+</section>
+<section id="just-files">
+<p class="kicker">Anatomy of a website</p>
+<h2 class="title">A website is a folder of ordinary files</h2>
+<div class="split">
+<div class="code in" style="--i:0; width:760px;">
+<p class="code-l code-big"><span class="c-t">USERNAME.github.io/</span><br>&#160;&#160;index.html&#160;&#160;&#160;<span class="c-c">the page</span><br>&#160;&#160;style.css&#160;&#160;&#160;&#160;<span class="c-c">the looks</span><br>&#160;&#160;photo.jpg&#160;&#160;&#160;&#160;<span class="c-c">an image</span></p>
+</div>
+<div class="col grow in" style="--i:1;">
+<h3 class="text-h">No magic</h3>
+<p class="text">You could open these files in any text editor. <b>Hosting</b> means putting the folder on a computer that is always on and connected: a server.</p>
+<h3 class="text-h">Why index.html</h3>
+<p class="text">When an address names no file, the server sends <b>index.html</b>. That is your home page.</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>This is the folder she will build in the exercise, so point out that this exact structure is the goal for today.</aside>
+</section>
+<section id="tag-anatomy">
+<p class="kicker">What is HTML</p>
+<h2 class="title">HTML labels each piece of content with tags</h2>
+<div class="chips">
+<div class="chip-col in" style="--i:0; width:560px;"><p class="chip">&lt;a href="https://…"&gt;</p><p class="chip-label"><span class="chip-label-b">Opening tag.</span> “a” means link. href is an attribute: extra information, here where the link goes.</p></div>
+<div class="chip-col in" style="--i:1; width:420px;"><p class="chip chip-soft">LinkedIn</p><p class="chip-label"><span class="chip-label-b">Content.</span> What the visitor sees.</p></div>
+<div class="chip-col in" style="--i:2; width:420px;"><p class="chip">&lt;/a&gt;</p><p class="chip-label"><span class="chip-label-b">Closing tag.</span> Same name, with a slash.</p></div>
+</div>
+<p class="lede-end">Opening tag + content + closing tag = an <b>element</b>. A few elements have no content and no closing tag, such as &lt;img&gt; and &lt;meta&gt;.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>HTML stands for HyperText Markup Language. “Markup” is the key word: it marks up text so the browser knows what each piece is. It is not a programming language; there is no logic in it.</aside>
+</section>
+<section id="html-tags">
+<p class="kicker">What is HTML</p>
+<h2 class="title">Six tags build most of your page</h2>
+<table class="tbl">
+<tr class="tbl-head"><th style="width:30%;">Tag</th><th style="width:40%;">What it is for</th><th style="width:30%;">On your page</th></tr>
+<tr><td class="tc">&lt;h1&gt; … &lt;h6&gt;</td><td>Headings; one h1 per page</td><td>Your name</td></tr>
+<tr><td class="tc">&lt;p&gt;</td><td>A paragraph of text</td><td>Your short bio</td></tr>
+<tr><td class="tc">&lt;a href="…"&gt;</td><td>A link to another page</td><td>LinkedIn</td></tr>
+<tr><td class="tc">&lt;img src="…" alt="…"&gt;</td><td>An image, with a text description</td><td>Your photo</td></tr>
+<tr><td class="tc">&lt;ul&gt; and &lt;li&gt;</td><td>A list and its items</td><td>Your talks</td></tr>
+<tr><td class="tc">&lt;main&gt;, &lt;header&gt;, &lt;div&gt;</td><td>Boxes that group other elements</td><td>Page sections</td></tr>
+</table>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>alt text is worth a minute: screen readers read it aloud, and search engines read it too. Good alt text describes what the image shows, e.g. “Parul Sharma speaking at a conference”.</aside>
+</section>
+<section id="html-skeleton">
+<p class="kicker">What is HTML</p>
+<h2 class="title">Every page has the same skeleton</h2>
+<div class="split">
+<div class="code in" style="--i:0; width:820px;">
+<p class="code-l"><span class="c-t">&lt;!DOCTYPE html&gt;</span><br><span class="c-t">&lt;html</span> <span class="c-a">lang="en"</span><span class="c-t">&gt;</span><br>&#160;&#160;<span class="c-t">&lt;head&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;meta</span> <span class="c-a">charset="UTF-8"</span><span class="c-t">&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;title&gt;</span>Parul Sharma<span class="c-t">&lt;/title&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;link</span> <span class="c-a">rel="stylesheet" href="style.css"</span><span class="c-t">&gt;</span><br>&#160;&#160;<span class="c-t">&lt;/head&gt;</span><br>&#160;&#160;<span class="c-t">&lt;body&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;h1&gt;</span>Hello!<span class="c-t">&lt;/h1&gt;</span><br>&#160;&#160;<span class="c-t">&lt;/body&gt;</span><br><span class="c-t">&lt;/html&gt;</span></p>
+</div>
+<div class="col grow in" style="--i:1;">
+<h3 class="text-h">&lt;head&gt;</h3>
+<p class="text">Information about the page: the title in the browser tab, which stylesheet to use. Visitors don’t see it.</p>
+<h3 class="text-h">&lt;body&gt;</h3>
+<p class="text">Everything visitors see.</p>
+<h3 class="text-h">Indenting</h3>
+<p class="text">Shows what sits inside what. The browser ignores it; people need it.</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Point out nesting: elements live inside other elements, like boxes in boxes. In VS Code, typing ! then Tab in an empty .html file generates this skeleton, but for today she types it.</aside>
+</section>
+<section id="css-rule">
+<p class="kicker">What is CSS</p>
+<h2 class="title">A CSS rule: find these, style them like this</h2>
+<div class="code in" style="--i:0; width:620px; margin-bottom:40px;">
+<p class="code-l code-big"><span class="c-t">h1</span> {<br>&#160;&#160;<span class="c-a">color</span>: #10213f;<br>&#160;&#160;<span class="c-a">font-size</span>: 48px;<br>}</p>
+</div>
+<div class="grid g3">
+<div class="card in" style="--i:1;"><p class="card-k">SELECTOR · h1</p><h3 class="card-h">Which elements</h3><p class="card-p">h1 means every h1. A class such as .tagline means anything with class="tagline".</p></div>
+<div class="card in" style="--i:2;"><p class="card-k">PROPERTY · color</p><h3 class="card-h">What to change</h3><p class="card-p">Hundreds exist; you will use about twenty. Note the American spelling.</p></div>
+<div class="card in" style="--i:3;"><p class="card-k">VALUE · #10213f</p><h3 class="card-h">Change it to what</h3><p class="card-p">Each property: value pair ends with a semicolon.</p></div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>CSS = Cascading Style Sheets. “Cascading” means that when two rules disagree, the more specific one wins. Don’t go deeper than that today; the theme and design system day covers it properly. #10213f is a hex colour: red, green and blue in pairs of hex digits.</aside>
+</section>
+<section id="css-includes">
+<p class="kicker">What is CSS</p>
+<h2 class="title">What styling covers</h2>
+<div class="grid g3" style="grid-template-rows:1fr 1fr; flex:1;">
+<div class="card in" style="--i:0;"><h3 class="card-h">Colour</h3><p class="card-p">Text, backgrounds, borders, links.</p></div>
+<div class="card in" style="--i:1;"><h3 class="card-h">Typography</h3><p class="card-p">Font, size, weight, line spacing.</p></div>
+<div class="card in" style="--i:2;"><h3 class="card-h">Spacing</h3><p class="card-p">Padding inside a box, margin outside it: the box model.</p></div>
+<div class="card in" style="--i:3;"><h3 class="card-h">Size</h3><p class="card-p">Width, height, and a maximum width for comfortable reading.</p></div>
+<div class="card in" style="--i:4;"><h3 class="card-h">Layout</h3><p class="card-p">Where boxes sit: side by side or stacked (flexbox, grid).</p></div>
+<div class="card in" style="--i:5;"><h3 class="card-h">Responsive</h3><p class="card-p">The same page working on a phone and a big screen.</p></div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Today she uses a few of each: colour, font, max-width, margin, border-radius. Day 3 (theme and design system) goes deep on all six. Every HTML element is a box; that sentence is the whole of the box model for now.</aside>
+</section>
+<section id="side-by-side">
+<p class="kicker">How the code looks</p>
+<h2 class="title">Two files in, one page out</h2>
+<div class="grid g3" style="align-items:stretch;">
+<div class="col in" style="--i:0; gap:0;"><p class="file-k">index.html</p><div class="code grow"><p class="code-l"><span class="c-t">&lt;h1&gt;</span>Hello, I’m Parul<br><span class="c-t">&lt;/h1&gt;</span><br><span class="c-t">&lt;p</span> <span class="c-a">class="role"</span><span class="c-t">&gt;</span><br>&#160;&#160;Security leader<br><span class="c-t">&lt;/p&gt;</span></p></div></div>
+<div class="col in" style="--i:1; gap:0;"><p class="file-k">style.css</p><div class="code grow"><p class="code-l"><span class="c-t">h1</span> {<br>&#160;&#160;<span class="c-a">color</span>: #10213f;<br>&#160;&#160;<span class="c-a">font-size</span>: 48px;<br>}<br><span class="c-t">.role</span> {<br>&#160;&#160;<span class="c-a">color</span>: #8b691c;<br>}</p></div></div>
+<div class="col in" style="--i:2; gap:0;"><p class="file-k">In the browser</p><div class="card grow" style="justify-content:center; background:#fbf8f1;"><p style="font-family:Georgia, serif; font-size:48px; font-weight:700; color:#10213f; margin:0; line-height:1.15;">Hello, I’m Parul</p><p style="font-family:Georgia, serif; font-size:28px; color:#8b691c; margin:0;">Security leader</p></div></div>
+</div>
+<p class="lede-end">The class “role” is the hook that connects the two files.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Read the HTML aloud as sentences: “a heading that says Hello, I’m Parul; a paragraph with the class role”. Then the CSS: “make every h1 navy and 48 pixels; make anything with class role gold”. The words “Security leader” are only an example here; her real tagline comes from question 1.</aside>
+</section>
+<section id="devtools">
+<p class="kicker">Try it now · 3 minutes</p>
+<h2 class="title">Look inside any website</h2>
+<div class="grid g4">
+<div class="card in" style="--i:0;"><p class="card-k">STEP 1</p><h3 class="card-h">Open a site</h3><p class="card-p">Any site in Chrome. A news site works well.</p></div>
+<div class="card in" style="--i:1;"><p class="card-k">STEP 2</p><h3 class="card-h">Inspect</h3><p class="card-p">Right-click a heading and choose Inspect. Its HTML is highlighted.</p></div>
+<div class="card in" style="--i:2;"><p class="card-k">STEP 3</p><h3 class="card-h">Change it</h3><p class="card-p">Double-click the text in the Elements panel, type something new, press Enter.</p></div>
+<div class="card in" style="--i:3;"><p class="card-k">STEP 4</p><h3 class="card-h">Reload</h3><p class="card-p">It’s back. You only changed your own copy of the files.</p></div>
+</div>
+<p class="lede-end">The real files live on the server. Your browser has a copy, and you can read every line of it. This panel is called <b>DevTools</b>.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Security angle for Parul: everything sent to the browser is visible to anyone. Never put secrets in HTML, CSS or JavaScript. Also show the Styles pane on the right: click a colour and change it. DevTools come back on Day 3 and when we watch a form submit.</aside>
+</section>
+<section id="vscode-tour">
+<p class="kicker">VS Code basics</p>
+<h2 class="title">Your workshop has four areas</h2>
+<div class="split">
+<div class="vs in" style="--i:0;">
+<div class="vs-bar"><p class="badge" style="align-self:center;">1</p><svg class="vs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></svg><svg class="vs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="8 6 2 12 8 18"/><polyline points="16 6 22 12 16 18"/></svg><svg class="vs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div>
+<div class="vs-side"><p class="badge">2</p><p class="vs-file">USERNAME.github.io</p><p class="vs-file">&#160;&#160;index.html</p><p class="vs-file">&#160;&#160;style.css</p><p class="vs-file">&#160;&#160;photo.jpg</p></div>
+<div class="vs-main">
+<div class="vs-editor"><p class="badge">3</p><p class="vs-code">&lt;h1&gt;Parul Sharma&lt;/h1&gt;<br>&lt;p&gt;…&lt;/p&gt;</p></div>
+<div class="vs-term"><p class="badge">4</p><p class="vs-code" style="color:#ece6d8;">parul@mac site % git status</p></div>
+</div>
+</div>
+<div class="legend in" style="--i:1;">
+<div class="legend-row"><p class="badge">1</p><p class="text"><b>Activity bar.</b> Switch between files, search, source control (Git) and extensions.</p></div>
+<div class="legend-row"><p class="badge">2</p><p class="text"><b>Explorer.</b> The files in the folder you opened.</p></div>
+<div class="legend-row"><p class="badge">3</p><p class="text"><b>Editor.</b> Where you type. A dot on a tab means unsaved.</p></div>
+<div class="legend-row"><p class="badge">4</p><p class="text"><b>Terminal.</b> A terminal already inside your project folder.</p></div>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Always open a folder (File, Open Folder), not a single file: VS Code then knows the project. Recommend turning on Auto Save (File menu) for today so nothing is lost. Install the “code” command now: Cmd+Shift+P, then “Shell Command: Install code command in PATH”.</aside>
+</section>
+<section id="vscode-keys">
+<p class="kicker">VS Code basics</p>
+<h2 class="title">Seven shortcuts worth learning today</h2>
+<table class="tbl">
+<tr class="tbl-head"><th style="width:34%;">Keys</th><th style="width:66%;">What happens</th></tr>
+<tr><td class="tc">Cmd + S</td><td>Save the file</td></tr>
+<tr><td class="tc">Cmd + P</td><td>Open a file by typing part of its name</td></tr>
+<tr><td class="tc">Ctrl + `</td><td>Show or hide the terminal</td></tr>
+<tr><td class="tc">Cmd + Shift + P</td><td>The command palette: search every action VS Code has</td></tr>
+<tr><td class="tc">Cmd + /</td><td>Turn a line into a comment, or back</td></tr>
+<tr><td class="tc">Option + Shift + F</td><td>Tidy the indenting of the whole file</td></tr>
+<tr><td class="tc">Cmd + Z</td><td>Undo, as many times as you need</td></tr>
+</table>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Don’t drill these. Mention them and use them during the exercise; she will pick them up by repetition. The backtick key is top-left, under Esc.</aside>
+</section>
+<section id="terminal-what">
+<p class="kicker">The terminal</p>
+<h2 class="title">A text conversation with your computer</h2>
+<div class="chips">
+<div class="chip-col in" style="--i:0; width:470px;"><p class="chip">parul@mac</p><p class="chip-label"><span class="chip-label-b">Who and where.</span> Your user name and your computer.</p></div>
+<div class="chip-col in" style="--i:1; width:470px;"><p class="chip">~/Documents</p><p class="chip-label"><span class="chip-label-b">Which folder.</span> ~ is short for your home folder.</p></div>
+<div class="chip-col in" style="--i:2; width:200px;"><p class="chip">%</p><p class="chip-label"><span class="chip-label-b">Ready.</span> Your turn.</p></div>
+<div class="chip-col in" style="--i:3; width:380px;"><p class="chip chip-soft">ls</p><p class="chip-label"><span class="chip-label-b">Your command.</span> Press Enter to send it.</p></div>
+</div>
+<p class="lede-end">Everything you do in Finder, you can type here. Developers use it because commands are exact, repeatable and fast.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>On her Mac the prompt will show her real user and computer names. Open Terminal (Cmd+Space, type Terminal) or the VS Code terminal; they are the same thing. Reassure: the commands today only read or create things; nothing deletes.</aside>
+</section>
+<section id="terminal-cmds">
+<p class="kicker">The terminal</p>
+<h2 class="title">Eight commands cover today</h2>
+<table class="tbl tbl-s">
+<tr class="tbl-head"><th style="width:22%;">Command</th><th style="width:46%;">Means</th><th style="width:32%;">Example</th></tr>
+<tr><td class="tc">pwd</td><td>Where am I?</td><td>/Users/parul</td></tr>
+<tr><td class="tc">ls</td><td>What is in this folder?</td><td>ls</td></tr>
+<tr><td class="tc">cd</td><td>Go into a folder</td><td>cd Documents</td></tr>
+<tr><td class="tc">cd ..</td><td>Go up one folder</td><td>cd ..</td></tr>
+<tr><td class="tc">mkdir</td><td>Make a folder</td><td>mkdir practice</td></tr>
+<tr><td class="tc">touch</td><td>Make an empty file</td><td>touch notes.txt</td></tr>
+<tr><td class="tc">open .</td><td>Show this folder in Finder</td><td>open .</td></tr>
+<tr><td class="tc">code .</td><td>Open this folder in VS Code</td><td>code .</td></tr>
+</table>
+<p class="lede-end" style="margin-top:28px;"><b>Try it:</b> cd Documents, then mkdir practice, cd practice, touch hello.txt, open .</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Two minutes of hands-on. Tip: press Tab to complete a folder name, and the Up arrow to repeat a command. The dot means “this folder”. She can delete the practice folder in Finder afterwards.</aside>
+</section>
+<section id="git-vs-github">
+<p class="kicker">Git and GitHub</p>
+<h2 class="title">Git is to GitHub what email is to Gmail</h2>
+<div class="grid g2">
+<div class="card in" style="--i:0;"><p class="card-k">GIT · ON YOUR MAC</p><h3 class="card-h">Save points for a folder</h3><p class="card-p">A program that records snapshots of your project. Each snapshot is a <b>commit</b>. You can see every change and go back to any point. Works offline.</p></div>
+<div class="card in" style="--i:1;"><p class="card-k">GITHUB · ONLINE</p><h3 class="card-h">A home for your project</h3><p class="card-p">A website that keeps a copy of your project, shows it to others and can publish it as a website. Owned by Microsoft.</p></div>
+</div>
+<p class="lede-end">A <b>repository</b> (repo) is a project folder that Git is tracking. You will have one copy on your Mac and one on GitHub.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Link to her work: every engineering team she manages lives in repos and commits. Git was written by Linus Torvalds in 2005 to manage the Linux kernel. GitLab and Bitbucket are GitHub alternatives; Git works the same with all of them.</aside>
+</section>
+<section id="git-flow">
+<p class="kicker">Git and GitHub</p>
+<h2 class="title">A change travels through four places</h2>
+<div class="flow">
+<div class="card node in" style="--i:0;"><p class="card-k">1</p><h3 class="card-h">Your folder</h3><p class="card-p">You edit and save files as usual.</p></div>
+<div class="arrow in" style="--i:1; width:150px;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg><p class="arrow-l">git add</p></div>
+<div class="card node in" style="--i:2;"><p class="card-k">2</p><h3 class="card-h">Staging</h3><p class="card-p">You pick which changes go into the next save.</p></div>
+<div class="arrow in" style="--i:3; width:150px;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg><p class="arrow-l">git commit</p></div>
+<div class="card node in" style="--i:4;"><p class="card-k">3</p><h3 class="card-h">Local repo</h3><p class="card-p">A save point with a message, on your Mac.</p></div>
+<div class="arrow in" style="--i:5; width:150px;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg><p class="arrow-l">git push</p></div>
+<div class="card node in" style="--i:6;"><p class="card-k">4</p><h3 class="card-h">GitHub</h3><p class="card-p">The online copy, safe and shareable.</p></div>
+</div>
+<p class="lede-end">Saving a file is not a commit. Until you commit and push, GitHub knows nothing about your change.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Analogy for staging: packing a parcel (add), sealing and labelling it (commit), posting it (push). git clone goes the other way: it copies a repo from GitHub to your Mac, and we do it once in the exercise.</aside>
+</section>
+<section id="git-cheatsheet" class="dark">
+<p class="kicker">Your take-home cheat sheet</p>
+<h2 class="title">Five commands you will use every day</h2>
+<div class="code in" style="--i:0;">
+<p class="code-l code-big">git status&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="c-c"># what has changed?</span><br>git add index.html&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="c-c"># stage a file (git add . = all)</span><br>git commit -m "Add my bio"&#160;&#160;<span class="c-c"># save a snapshot with a note</span><br>git push&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="c-c"># send it to GitHub</span><br>git log --oneline&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="c-c"># list your save points</span></p>
+</div>
+<p class="lede-end">When in doubt, run <b>git status</b>. It tells you where you are and usually what to do next.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Commit messages: short, present tense, say what changed (“Add LinkedIn link”, not “update”). This slide is the take-home: export it or send it to her after the session.</aside>
+</section>
+<section id="git-setup">
+<p class="kicker">One-time setup · 5 minutes</p>
+<h2 class="title">Introduce yourself to Git, once per computer</h2>
+<div class="split">
+<div class="code in" style="--i:0; width:1060px;">
+<p class="code-l"><span class="c-c"># 1. Install Git (Apple’s developer tools)</span><br>xcode-select --install<br>git --version<br>&#160;<br><span class="c-c"># 2. Tell Git who you are</span><br>git config --global user.name "Parul Sharma"<br>git config --global user.email "USERNAME@users.noreply.github.com"<br>&#160;<br><span class="c-c"># 3. Sign in to GitHub from the terminal</span><br>gh auth login</p>
+</div>
+<div class="col grow in" style="--i:1;">
+<h3 class="text-h">Why “noreply”?</h3>
+<p class="text">Your email is stamped on every commit, and your repo will be public. GitHub’s private address keeps your real one out of view. Find yours under Settings, Emails.</p>
+<h3 class="text-h">What is gh?</h3>
+<p class="text">The GitHub CLI. Install it from cli.github.com first. It handles your GitHub sign-in so git push just works.</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>She was asked to run xcode-select --install before the session; git --version confirms it worked. For gh auth login choose: GitHub.com, HTTPS, Yes (authenticate Git), Login with a web browser. Biggest risk of the day is sign-in trouble; if it eats more than 10 minutes, finish the page locally and push next session.</aside>
+</section>
+<section id="pages-how">
+<p class="kicker">GitHub Pages and hosting</p>
+<h2 class="title">Push to GitHub, and GitHub hosts it for you</h2>
+<div class="flow">
+<div class="card node in" style="--i:0;"><p class="card-k">YOUR MAC</p><h3 class="card-h">You commit</h3><p class="card-p">index.html, style.css and your photo.</p></div>
+<div class="arrow in" style="--i:1; width:170px;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg><p class="arrow-l">git push</p></div>
+<div class="card node in" style="--i:2;"><p class="card-k">GITHUB REPO</p><h3 class="card-h">USERNAME.github.io</h3><p class="card-p">The repo name is the trick: it tells GitHub this is your site.</p></div>
+<div class="arrow in" style="--i:3; width:170px;"><svg class="arr" viewBox="0 0 56 28" aria-hidden="true"><path d="M0 9h34V0l22 14-22 14v-9H0z" fill="#c29b3c"/></svg><p class="arrow-l">~1 minute</p></div>
+<div class="card node in" style="--i:4;"><p class="card-k">THE INTERNET</p><h3 class="card-h">Live for anyone</h3><p class="card-p">https://USERNAME.github.io, with HTTPS included.</p></div>
+</div>
+<p class="lede-end"><b>Hosting</b> = keeping your files on a server that is always on. <b>Deploying</b> = putting a new version there. GitHub Pages does both, free.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Today Pages publishes straight from the main branch. When Astro arrives on Day 2, we switch the Pages source to GitHub Actions, which builds the site first. A custom domain can come later; the free address is fine for now.</aside>
+</section>
+<section id="public-repo" class="dark">
+<p class="kicker">A security note for a security leader</p>
+<h2 class="title">A free Pages site means a public repo</h2>
+<div class="grid g2">
+<div class="card in" style="--i:0;"><p class="card-k">SAFE TO COMMIT</p><h3 class="card-h">What you’d say on stage</h3><p class="card-p">Your bio, your talks, the photo you chose, your HTML and CSS.</p></div>
+<div class="card in" style="--i:1;"><p class="card-k">NEVER COMMIT</p><h3 class="card-h">What you wouldn’t</h3><p class="card-p">Passwords, tokens and API keys. Your phone number or home address. Anything internal from work.</p></div>
+</div>
+<p class="lede-end">Git never forgets. Deleting a file later still leaves it in the history, so check <b>git status</b> before every commit.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Tie back to question 3 (what stays off the site). Leaked secrets in public repos are a real attack vector: bots scan GitHub for keys within minutes. GitHub’s secret scanning and push protection help, but the habit matters more. Later: why Pages can’t set security headers, and the CSP meta tag workaround.</aside>
+</section>
+<section id="ex-brief" style="background:#f6f1e7;">
+<p class="kicker">Exercise · 16 minutes</p>
+<h2 class="title">Your profile page, by hand, live today</h2>
+<div class="split">
+<div class="col grow in" style="--i:0; gap:24px;">
+<p class="text" style="color:#141b2a;">One page with five things:</p>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">Your photo</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">Your name, as the h1</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">One line: your 30-second message</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">Two or three sentences about you</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">A link to your LinkedIn</p></div>
+<p class="text" style="margin-top:12px;"><b>The rule:</b> you type every line. No copy and paste.</p>
+</div>
+<div class="mock in" style="--i:1; width:640px; background:#fbf8f1;">
+<div class="mock-photo" style="border-radius:50%;"></div>
+<p class="mock-name">Parul Sharma</p>
+<p class="mock-tag">[your 30-second message]</p>
+<p class="mock-tag" style="font-size:24px;">[two or three sentences about you]</p>
+<p class="mock-link">LinkedIn</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Typing builds understanding; that is what she asked for (“I type and understand every line”). Use placeholder text if her message isn’t settled yet; real content comes in the next sessions. This exact HTML and CSS will move into Astro on Day 2 almost unchanged, so nothing she types today is thrown away.</aside>
+</section>
+<section id="ex-step1" style="background:#f6f1e7;">
+<p class="kicker">Exercise · Step 1 of 4</p>
+<h2 class="title">Create the repo and bring it to your Mac</h2>
+<div class="split">
+<div class="col in" style="--i:0; width:540px; gap:20px;">
+<p class="file-k">ON GITHUB.COM</p>
+<p class="text"><b>1.</b> Click + then New repository.</p>
+<p class="text"><b>2.</b> Name it exactly USERNAME.github.io (your username).</p>
+<p class="text"><b>3.</b> Choose Public and tick Add a README.</p>
+<p class="text"><b>4.</b> Create, then copy the HTTPS address from the green Code button.</p>
+</div>
+<div class="col grow in" style="--i:1; gap:0;">
+<p class="file-k">IN THE TERMINAL</p>
+<div class="code"><p class="code-l">cd ~/Documents<br>git clone https://github.com/USERNAME/USERNAME.github.io.git<br>cd USERNAME.github.io<br>code .</p></div>
+<p class="text" style="margin-top:28px;">VS Code opens with your repo. Copy your photo into this folder and name it <b>photo.jpg</b>.</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>git clone copies the repo from GitHub to her Mac, already connected to GitHub, so git push will know where to go. If code . says “command not found”, install it from the command palette (see the VS Code slide) or use File, Open Folder.</aside>
+</section>
+<section id="ex-step2" style="background:#f6f1e7;">
+<div class="split" style="flex:1;">
+<div class="col in" style="--i:0; width:660px; gap:24px;">
+<p class="kicker" style="margin:0;">Exercise · Step 2 of 4</p>
+<h2 class="title" style="margin:0 0 16px;">Type index.html</h2>
+<p class="text">In VS Code: New File, name it <b>index.html</b>, and type the code. Replace the [brackets] with your words.</p>
+<p class="text"><b>alt</b> describes your photo for screen readers and search engines.</p>
+<p class="text"><b>class="tagline"</b> is the hook your CSS uses in step 3.</p>
+<p class="text">Save, then double-click index.html in Finder to see it in your browser.</p>
+</div>
+<div class="code grow in" style="--i:1;">
+<p class="code-l"><span class="c-t">&lt;!DOCTYPE html&gt;</span><br><span class="c-t">&lt;html</span> <span class="c-a">lang="en"</span><span class="c-t">&gt;</span><br><span class="c-t">&lt;head&gt;</span><br>&#160;&#160;<span class="c-t">&lt;meta</span> <span class="c-a">charset="UTF-8"</span><span class="c-t">&gt;</span><br>&#160;&#160;<span class="c-t">&lt;meta</span> <span class="c-a">name="viewport"</span><br>&#160;&#160;&#160;&#160;<span class="c-a">content="width=device-width, initial-scale=1"</span><span class="c-t">&gt;</span><br>&#160;&#160;<span class="c-t">&lt;title&gt;</span>Parul Sharma<span class="c-t">&lt;/title&gt;</span><br>&#160;&#160;<span class="c-t">&lt;link</span> <span class="c-a">rel="stylesheet" href="style.css"</span><span class="c-t">&gt;</span><br><span class="c-t">&lt;/head&gt;</span><br><span class="c-t">&lt;body&gt;</span><br>&#160;&#160;<span class="c-t">&lt;main&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;img</span> <span class="c-a">src="photo.jpg" alt="Parul Sharma"</span><span class="c-t">&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;h1&gt;</span>Parul Sharma<span class="c-t">&lt;/h1&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;p</span> <span class="c-a">class="tagline"</span><span class="c-t">&gt;</span>[your 30-second message]<span class="c-t">&lt;/p&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;p&gt;</span>[two or three sentences about you]<span class="c-t">&lt;/p&gt;</span><br>&#160;&#160;&#160;&#160;<span class="c-t">&lt;a</span> <span class="c-a">href="[your LinkedIn URL]"</span><span class="c-t">&gt;</span>LinkedIn<span class="c-t">&lt;/a&gt;</span><br>&#160;&#160;<span class="c-t">&lt;/main&gt;</span><br><span class="c-t">&lt;/body&gt;</span><br><span class="c-t">&lt;/html&gt;</span></p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Let her type; resist correcting typos until she sees the result. A missing closing tag or quote is the best lesson of the day: find it together. The viewport line makes the page behave on phones. Point out that without style.css yet, the page already works, just plain: that is HTML on its own.</aside>
+</section>
+<section id="ex-step3" style="background:#f6f1e7;">
+<div class="split" style="flex:1;">
+<div class="col in" style="--i:0; width:660px; gap:24px;">
+<p class="kicker" style="margin:0;">Exercise · Step 3 of 4</p>
+<h2 class="title" style="margin:0 0 16px;">Type style.css</h2>
+<p class="text">New File, named <b>style.css</b>, in the same folder. Save, then reload the browser.</p>
+<p class="text"><b>margin: 80px auto</b> centres the page and leaves space above it.</p>
+<p class="text"><b>max-width</b> keeps lines short enough to read comfortably.</p>
+<p class="text"><b>border-radius: 50%</b> turns your photo into a circle.</p>
+<p class="text">These colours are placeholders. You choose your own on Day 3.</p>
+</div>
+<div class="code grow in" style="--i:1;">
+<p class="code-l"><span class="c-t">body</span> {<br>&#160;&#160;<span class="c-a">margin</span>: 0;<br>&#160;&#160;<span class="c-a">background</span>: #fbf8f1;<br>&#160;&#160;<span class="c-a">color</span>: #141b2a;<br>&#160;&#160;<span class="c-a">font-family</span>: Georgia, serif;<br>&#160;&#160;<span class="c-a">line-height</span>: 1.6;<br>}<br><span class="c-t">main</span> {<br>&#160;&#160;<span class="c-a">max-width</span>: 560px;<br>&#160;&#160;<span class="c-a">margin</span>: 80px auto;<br>&#160;&#160;<span class="c-a">padding</span>: 0 16px;<br>&#160;&#160;<span class="c-a">text-align</span>: center;<br>}<br><span class="c-t">img</span> {<br>&#160;&#160;<span class="c-a">width</span>: 160px;<br>&#160;&#160;<span class="c-a">border-radius</span>: 50%;<br>}<br><span class="c-t">.tagline</span> { <span class="c-a">font-size</span>: 22px; }<br><span class="c-t">a</span> { <span class="c-a">color</span>: #10213f; }</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Have her change one value (a colour or the photo width), save and reload, to feel the loop of edit, save, see. Then open DevTools on her own page and find the same rule in the Styles pane.</aside>
+</section>
+<section id="ex-step4" style="background:#f6f1e7;">
+<p class="kicker">Exercise · Step 4 of 4</p>
+<h2 class="title">Commit, push and go live</h2>
+<div class="split">
+<div class="col in" style="--i:0; width:760px; gap:0;">
+<p class="file-k">IN THE TERMINAL</p>
+<div class="code"><p class="code-l code-big">git status<br>git add .<br>git commit -m "My first page"<br>git push</p></div>
+<p class="text" style="margin-top:24px;">Read what git status lists before you add it.</p>
+</div>
+<div class="col grow in" style="--i:1; gap:20px;">
+<p class="file-k">ON GITHUB.COM</p>
+<p class="text"><b>1.</b> Open your repo, then Settings, then Pages.</p>
+<p class="text"><b>2.</b> Check the source: Deploy from a branch, main, / (root).</p>
+<p class="text"><b>3.</b> Wait about a minute. The Actions tab shows progress.</p>
+<p class="text"><b>4.</b> Open https://USERNAME.github.io</p>
+</div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>For a repo named USERNAME.github.io, Pages is usually switched on automatically from main; step 2 is a check, not a setup. If the page shows a 404, wait another minute and hard-reload (Cmd+Shift+R). If the photo doesn’t show, check the file name matches exactly: photo.jpg, lower case. This is her first commit on her own site: mark the moment.</aside>
+</section>
+<section id="ex-done" style="background:#f6f1e7;">
+<p class="kicker">Exercise · Check</p>
+<h2 class="title">Done when it opens on your phone</h2>
+<div class="split">
+<div class="col grow in" style="--i:0; gap:28px;">
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">https://USERNAME.github.io opens on your phone</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">Your photo shows, in a circle</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">The LinkedIn link goes to your profile</p></div>
+<div class="check-row"><svg class="check-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg><p class="text">Your commit “My first page” is on GitHub</p></div>
+</div>
+<div class="card in" style="--i:1; width:640px; background:#fbf8f1;"><p class="card-k">STRETCH · IF THERE’S TIME</p><h3 class="card-h">Go round the loop once more</h3><p class="card-p">Change one colour in style.css. Save, commit, push, and watch the live site update. That loop is how you will update your site from now on.</p></div>
+</div>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Opening it on her own phone is the moment that lands. Let her send the link to Aditi.</aside>
+</section>
+<section id="recap">
+<p class="kicker">Wrap-up</p>
+<h2 class="title">You are live on the internet</h2>
+<div class="grid g3">
+<div class="card in" style="--i:0;"><p class="card-k">YOU CAN NOW</p><p class="card-p">Explain what happens when someone opens your URL.</p><p class="card-p">Write a page in HTML and style it with CSS.</p><p class="card-p">Commit and push a change, and see it go live.</p></div>
+<div class="card in" style="--i:1;"><p class="card-k">WORDS YOU USED</p><p class="card-p">URL, DNS, server, HTTPS, HTML, CSS, DevTools, terminal, repo, commit, push, clone, hosting, deploy.</p><p class="card-p">You will meet all of them again in Term 1.</p></div>
+<div class="card in" style="--i:2;"><p class="card-k">BEFORE DAY 2 · 20 MIN</p><p class="card-p">Paste your resume into Claude with the prompt I send you. Get two bio drafts, short and long.</p><p class="card-p">Edit one into your own voice.</p></div>
+</div>
+<p class="lede-end"><b>Next: Day 2, Astro and Claude Code.</b> Your page moves into a real framework, without losing a line you typed today.</p>
+<div class="foot"><p class="foot-t">Sanketana School of Code</p><p class="foot-t">Day 1 · Web basics and Git</p></div>
+<aside>Send after the session: her live URL, the five-command cheat sheet (the cheat sheet slide), and the bio prompt. Note her answers to the four questions; they feed her CLAUDE.md later.</aside>
+</section>
+</div>
+<div id="hud"></div>
+<script>
+const S = [...document.querySelectorAll('#stage > section')];
+const stage = document.getElementById('stage'), hud = document.getElementById('hud');
+let i = Math.max(0, Math.min(S.length - 1, (parseInt(location.hash.slice(7)) || 1) - 1));
+function fit() {
+  const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `scale(${k}) translate(-50%, -50%)`;
+}
+function show(n) {
+  i = Math.max(0, Math.min(S.length - 1, n));
+  S.forEach((s, j) => s.classList.toggle('on', j === i));
+  hud.textContent = `${i + 1} / ${S.length}  ·  ← → to move · N for notes · F for full screen`;
+  history.replaceState(null, '', '#slide-' + (i + 1));
+}
+addEventListener('resize', fit);
+addEventListener('keydown', e => {
+  if (['ArrowRight', 'PageDown', ' '].includes(e.key)) show(i + 1);
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) show(i - 1);
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(S.length - 1);
+  else if (e.key === 'n' || e.key === 'N') document.body.classList.toggle('notes');
+  else if (e.key === 'f' || e.key === 'F') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+});
+addEventListener('click', e => show(e.clientX > innerWidth / 3 ? i + 1 : i - 1));
+fit(); show(i);
+</script>
+</body>
+</html>
