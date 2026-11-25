@@ -1,0 +1,53 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step2_layout/.github/workflows/deploy.yml step3_deploy/.github/workflows/deploy.yml
+--- step2_layout/.github/workflows/deploy.yml	1970-01-01 05:30:00.000000000 +0530
++++ step3_deploy/.github/workflows/deploy.yml	2026-11-25 23:30:07.889532732 +0530
+@@ -0,0 +1,33 @@
++# [INVESTIGATE · step 3] GitHub's robot: on every push to main, build the site and publish dist/ to GitHub Pages.
++# Predict: which job runs `npm run build`, and which one makes the site public?
++name: Deploy to GitHub Pages
++
++on:
++  push:
++    branches: [main]
++  workflow_dispatch:
++
++permissions:
++  contents: read
++  pages: write
++  id-token: write
++
++jobs:
++  build:
++    runs-on: ubuntu-latest
++    steps:
++      - name: Check out the code
++        uses: actions/checkout@v6
++      - name: Install, build and upload the site
++        uses: withastro/action@v6
++
++  deploy:
++    needs: build
++    runs-on: ubuntu-latest
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - name: Publish to GitHub Pages
++        id: deployment
++        uses: actions/deploy-pages@v4
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step2_layout/src/pages/index.astro step3_deploy/src/pages/index.astro
+--- step2_layout/src/pages/index.astro	2026-11-25 23:29:56.890745948 +0530
++++ step3_deploy/src/pages/index.astro	2026-11-25 23:30:07.908881399 +0530
+@@ -1,8 +1,8 @@
+ ---
+-// STEP 2 · A shared layout
+-// Adds:      a layout with the page <head>, a tab title, Mira's colours and styles; the home page is wrapped in it
+-// Ends with: works: a styled page with a proper tab title
+-// Run:       npm run dev  →  http://localhost:4321/portfolio/
++// STEP 3 · Live on GitHub Pages
++// Adds:      a GitHub Actions workflow that builds the site and publishes it on every push
++// Ends with: ★ payoff: the page is live at https://YOUR-GITHUB-USERNAME.github.io/portfolio/
++// Run:       npm run build (look inside dist/), then git push
+ 
+ // [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+ import Base from '../layouts/Base.astro';

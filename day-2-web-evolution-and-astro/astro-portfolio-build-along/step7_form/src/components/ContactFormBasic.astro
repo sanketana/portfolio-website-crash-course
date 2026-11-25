@@ -1,0 +1,13 @@
+---
+// [PASTE · step 7] The form's address comes in from the page — ask: why pass it in instead of writing it here?
+const { action } = Astro.props;
+---
+<!-- [TYPE · step 7] A plain HTML form: name, email, message, and a Send button -->
+<form action={action} method="POST" class="contact">
+  <label>Name <input name="name" required /></label>
+  <label>Email <input type="email" name="email" required /></label>
+  <label>Message <textarea name="message" rows="4" required></textarea></label>
+  <!-- [TYPE · step 7] Spam trap: a field people never see; bots fill it in, and Formspree drops those messages -->
+  <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+  <button type="submit">Send</button>
+</form>

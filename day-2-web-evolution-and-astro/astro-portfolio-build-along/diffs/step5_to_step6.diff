@@ -1,0 +1,78 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step5_collection/src/content/writeups/hospital-app-pentest.md step6_pages/src/content/writeups/hospital-app-pentest.md
+--- step5_collection/src/content/writeups/hospital-app-pentest.md	2026-11-25 23:30:18.325411661 +0530
++++ step6_pages/src/content/writeups/hospital-app-pentest.md	2026-11-25 23:30:44.850470920 +0530
+@@ -2,6 +2,8 @@
+ # [INVESTIGATE · step 4] A second write-up, given as sample data — predict: will the site show it?
+ title: Five findings from a hospital app pen test
+ date: 2026-05-02
++# step 6: summary added, because the schema said it was missing
++summary: Two weeks, five findings, five fixes. What we found in a patient portal.
+ ---
+ 
+ A two-week test of a patient portal, done with the hospital's permission and a signed scope.
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step5_collection/src/layouts/Base.astro step6_pages/src/layouts/Base.astro
+--- step5_collection/src/layouts/Base.astro	2026-11-25 23:30:31.144759911 +0530
++++ step6_pages/src/layouts/Base.astro	2026-11-25 23:30:44.850783821 +0530
+@@ -39,4 +39,7 @@
+   .writeups li { padding: 14px 0; border-bottom: 1px solid #ddd8cc; }
+   .writeups h3 { margin: 0 0 4px; }
+   .writeups p { margin: 0; }
++
++  /* [INVESTIGATE · step 6] The date line on a write-up page */
++  .meta { color: #5b6475; margin-top: 6px; }
+ </style>
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step5_collection/src/pages/index.astro step6_pages/src/pages/index.astro
+--- step5_collection/src/pages/index.astro	2026-11-25 23:30:31.144644406 +0530
++++ step6_pages/src/pages/index.astro	2026-11-25 23:30:44.850675871 +0530
+@@ -1,8 +1,8 @@
+ ---
+-// STEP 5 · A content collection
+-// Adds:      a collection with a schema, and a write-ups list on the home page built from it
+-// Ends with: fails: the build stops; the schema rejects the given write-up because it has no summary
+-// Run:       npm run dev  →  read the error in the terminal and the browser
++// STEP 6 · A page for every write-up
++// Adds:      the missing summary, one page per write-up from [id].astro, and links from the home page
++// Ends with: ★ payoff: both write-ups listed, each with its own page, built from Markdown
++// Run:       npm run build (look inside dist/writeups/), then git push
+ 
+ // [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+ import Base from '../layouts/Base.astro';
+@@ -29,10 +29,11 @@
+ 
+   <!-- [PASTE · step 5] One list item per write-up in the collection — ask: how many <li> will the browser receive? -->
+   <h2>Write-ups</h2>
++  <!-- step 6: each title wrapped in a link to its own page -->
+   <ul class="writeups">
+     {writeups.map((w) => (
+       <li>
+-        <h3>{w.data.title}</h3>
++        <h3><a href={`${import.meta.env.BASE_URL}writeups/${w.id}/`}>{w.data.title}</a></h3>
+         <p>{w.data.summary}</p>
+       </li>
+     ))}
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step5_collection/src/pages/writeups/[id].astro step6_pages/src/pages/writeups/[id].astro
+--- step5_collection/src/pages/writeups/[id].astro	1970-01-01 05:30:00.000000000 +0530
++++ step6_pages/src/pages/writeups/[id].astro	2026-11-25 23:30:44.833153147 +0530
+@@ -0,0 +1,22 @@
++---
++// [PASTE · step 6] Bring in the collection tools and the shared layout
++import { getCollection, render } from 'astro:content';
++import Base from '../../layouts/Base.astro';
++
++// [INVESTIGATE · step 6] One page per write-up — predict: when does this run, and how many pages will it make?
++export async function getStaticPaths() {
++  const writeups = await getCollection('writeups');
++  return writeups.map((w) => ({ params: { id: w.id }, props: { w } }));
++}
++
++// [PASTE · step 6] Turn this write-up's Markdown into HTML — ask: where does <Content /> come from?
++const { w } = Astro.props;
++const { Content } = await render(w);
++---
++<!-- [PASTE · step 6] The write-up page: a way home, the title, the date and the Markdown body -->
++<Base title={`${w.data.title} | Mira Varma`}>
++  <p><a href={import.meta.env.BASE_URL}>← All write-ups</a></p>
++  <h1>{w.data.title}</h1>
++  <p class="meta">{w.data.date.toDateString()}</p>
++  <Content />
++</Base>

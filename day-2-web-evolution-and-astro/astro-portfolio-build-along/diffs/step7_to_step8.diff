@@ -1,0 +1,122 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step7_form/astro.config.mjs step8_island/astro.config.mjs
+--- step7_form/astro.config.mjs	2026-11-25 23:30:52.048396695 +0530
++++ step8_island/astro.config.mjs	2026-11-25 23:31:24.987485932 +0530
+@@ -1,7 +1,11 @@
+ // [PASTE · step 1] Where the site will live on GitHub Pages — ask: why does the address end in the repo name?
+ import { defineConfig } from 'astro/config';
++// [PASTE · step 8] Teach Astro to render React components — ask: does this add JavaScript to every page?
++import react from '@astrojs/react';
+ 
+ export default defineConfig({
+   site: 'https://YOUR-GITHUB-USERNAME.github.io',
+   base: '/portfolio/',
++  // [PASTE · step 8] Switch the React integration on
++  integrations: [react()],
+ });
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step7_form/package.json step8_island/package.json
+--- step7_form/package.json	2026-11-25 23:29:14.260878968 +0530
++++ step8_island/package.json	2026-11-25 23:31:24.987319716 +0530
+@@ -8,6 +8,9 @@
+     "preview": "astro preview"
+   },
+   "dependencies": {
+-    "astro": "^7.4.13"
++    "@astrojs/react": "^7.1.9",
++    "astro": "^7.4.13",
++    "react": "^19.3.1",
++    "react-dom": "^19.3.1"
+   }
+ }
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step7_form/src/components/ContactForm.jsx step8_island/src/components/ContactForm.jsx
+--- step7_form/src/components/ContactForm.jsx	1970-01-01 05:30:00.000000000 +0530
++++ step8_island/src/components/ContactForm.jsx	2026-11-25 23:31:24.959635813 +0530
+@@ -0,0 +1,42 @@
++// [PASTE · step 8] React's memory for this island — ask: what four states can the form be in?
++import { useState } from 'react';
++
++export default function ContactForm({ action }) {
++  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
++
++  // [INVESTIGATE · step 8] Send the form in the background, like the AJAX slide — predict: does the page reload?
++  async function handleSubmit(event) {
++    event.preventDefault();
++    setStatus('sending');
++    try {
++      const response = await fetch(action, {
++        method: 'POST',
++        body: new FormData(event.target),
++        headers: { Accept: 'application/json' },
++      });
++      setStatus(response.ok ? 'sent' : 'error');
++    } catch {
++      setStatus('error');
++    }
++  }
++
++  // [TYPE · step 8] What the visitor sees once the message has gone
++  if (status === 'sent') {
++    return <p className="sent">Thanks, your message is on its way. I reply within two working days.</p>;
++  }
++
++  // [INVESTIGATE · step 8] Your plain form, rewritten in React — spot the four differences from ContactFormBasic.astro
++  return (
++    <form action={action} method="POST" onSubmit={handleSubmit} className="contact">
++      <label>Name <input name="name" required /></label>
++      <label>Email <input type="email" name="email" required /></label>
++      <label>Message <textarea name="message" rows={4} required /></label>
++      <input type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
++      <button type="submit" disabled={status === 'sending'}>
++        {status === 'sending' ? 'Sending…' : 'Send'}
++      </button>
++      {/* [TYPE · step 8] What the visitor sees if sending fails */}
++      {status === 'error' && <p className="error">Something went wrong. Please try again in a minute.</p>}
++    </form>
++  );
++}
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step7_form/src/layouts/Base.astro step8_island/src/layouts/Base.astro
+--- step7_form/src/layouts/Base.astro	2026-11-25 23:31:06.439887387 +0530
++++ step8_island/src/layouts/Base.astro	2026-11-25 23:31:24.987645955 +0530
+@@ -48,4 +48,10 @@
+   .contact label { display: grid; gap: 4px; font-weight: 600; }
+   .contact input, .contact textarea { font: inherit; padding: 10px 12px; border: 1px solid #b9c2cf; border-radius: 8px; }
+   .contact button { justify-self: start; font: inherit; font-weight: 600; padding: 10px 22px; border: 0; border-radius: 8px; background: var(--accent); color: white; cursor: pointer; }
++
++  /* [INVESTIGATE · step 8] Styles for the island's sending, sent and error states */
++  .contact button:disabled { opacity: 0.6; cursor: wait; }
++  .sent, .error { padding: 12px 16px; border-radius: 8px; margin: 0; }
++  .sent { background: #e3f2ef; }
++  .error { background: #fbe6e1; }
+ </style>
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step7_form/src/pages/index.astro step8_island/src/pages/index.astro
+--- step7_form/src/pages/index.astro	2026-11-25 23:31:06.439759106 +0530
++++ step8_island/src/pages/index.astro	2026-11-25 23:31:24.987589329 +0530
+@@ -1,8 +1,8 @@
+ ---
+-// STEP 7 · A contact form in plain HTML
+-// Adds:      a Formspree address and a plain HTML contact form at the bottom of the home page
+-// Ends with: fails: messages send, but every visitor is taken off the site to Formspree's page
+-// Run:       npm run dev  →  send yourself a test message
++// STEP 8 · The contact form becomes an island
++// Adds:      React, a ContactForm island that sends in the background, and client:visible on the home page
++// Ends with: ★ payoff: messages send without leaving the page; only this island loads JavaScript, when it scrolls into view
++// Run:       npm install && npm run dev  →  scroll down with the Network tab open, then send a message
+ 
+ // [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+ import Base from '../layouts/Base.astro';
+@@ -15,6 +15,8 @@
+ const FORMSPREE = 'https://formspree.io/f/YOUR-FORM-ID';
+ // [PASTE · step 7] Bring in the plain HTML contact form
+ import ContactFormBasic from '../components/ContactFormBasic.astro';
++// [PASTE · step 8] Bring in the React contact form island
++import ContactForm from '../components/ContactForm.jsx';
+ ---
+ <!-- step 2: everything below wrapped in the shared layout -->
+ <Base title="Mira Varma, Application Security Lead">
+@@ -46,5 +48,6 @@
+ 
+   <!-- [PASTE · step 7] The contact section, at the very bottom of the page — ask: what does the form need from the page? -->
+   <h2 id="contact">Get in touch</h2>
+-  <ContactFormBasic action={FORMSPREE} />
++  <!-- step 8: reference swapped from ContactFormBasic to the ContactForm island; client:visible typed by Parul -->
++  <ContactForm client:visible action={FORMSPREE} />
+ </Base>

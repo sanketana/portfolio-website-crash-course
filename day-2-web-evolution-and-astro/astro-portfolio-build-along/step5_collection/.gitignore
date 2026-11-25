@@ -1,0 +1,4 @@
+# [PASTE · step 1] Folders Git should never upload: installed packages and build output
+node_modules/
+dist/
+.astro/

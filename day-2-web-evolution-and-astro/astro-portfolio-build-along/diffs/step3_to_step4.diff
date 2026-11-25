@@ -1,0 +1,53 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step3_deploy/src/content/writeups/hospital-app-pentest.md step4_markdown/src/content/writeups/hospital-app-pentest.md
+--- step3_deploy/src/content/writeups/hospital-app-pentest.md	1970-01-01 05:30:00.000000000 +0530
++++ step4_markdown/src/content/writeups/hospital-app-pentest.md	2026-11-25 23:30:18.325411661 +0530
+@@ -0,0 +1,15 @@
++---
++# [INVESTIGATE · step 4] A second write-up, given as sample data — predict: will the site show it?
++title: Five findings from a hospital app pen test
++date: 2026-05-02
++---
++
++A two-week test of a patient portal, done with the hospital's permission and a signed scope.
++
++1. Appointment IDs could be guessed, exposing other patients' bookings
++2. Password reset links never expired
++3. Uploaded files were served from the main domain
++4. The admin panel was reachable from the internet
++5. Logs stored full session tokens
++
++Every finding came with a fix, and a retest two weeks later.
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step3_deploy/src/content/writeups/threat-modelling-payments.md step4_markdown/src/content/writeups/threat-modelling-payments.md
+--- step3_deploy/src/content/writeups/threat-modelling-payments.md	1970-01-01 05:30:00.000000000 +0530
++++ step4_markdown/src/content/writeups/threat-modelling-payments.md	2026-11-25 23:30:18.323702677 +0530
+@@ -0,0 +1,14 @@
++---
++# [TYPE · step 4] Your first write-up: a title, a date and a one-line summary, then the story in Markdown
++title: Threat modelling a payments feature
++date: 2026-03-14
++summary: A one-hour whiteboard session found three flaws before any code was written.
++---
++
++We mapped how money moves through the new "split the bill" feature, then asked one question at every arrow: what could go wrong here?
++
++- A shared payment link could be **replayed** to pay twice
++- Amounts were trusted from the phone instead of checked on the server
++- Error messages leaked other users' names
++
++All three were fixed in the design, before a single line of code.
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step3_deploy/src/pages/index.astro step4_markdown/src/pages/index.astro
+--- step3_deploy/src/pages/index.astro	2026-11-25 23:30:07.908881399 +0530
++++ step4_markdown/src/pages/index.astro	2026-11-25 23:30:18.341231735 +0530
+@@ -1,8 +1,8 @@
+ ---
+-// STEP 3 · Live on GitHub Pages
+-// Adds:      a GitHub Actions workflow that builds the site and publishes it on every push
+-// Ends with: ★ payoff: the page is live at https://YOUR-GITHUB-USERNAME.github.io/portfolio/
+-// Run:       npm run build (look inside dist/), then git push
++// STEP 4 · Write-ups as Markdown files
++// Adds:      two write-ups as Markdown files in src/content/writeups/ (one typed, one given)
++// Ends with: fails: the files are there, but the site doesn't show them; Astro doesn't know they are content
++// Run:       npm run dev  →  http://localhost:4321/portfolio/
+ 
+ // [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+ import Base from '../layouts/Base.astro';

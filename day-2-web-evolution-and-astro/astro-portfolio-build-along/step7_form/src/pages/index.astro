@@ -1,0 +1,50 @@
+---
+// STEP 7 · A contact form in plain HTML
+// Adds:      a Formspree address and a plain HTML contact form at the bottom of the home page
+// Ends with: fails: messages send, but every visitor is taken off the site to Formspree's page
+// Run:       npm run dev  →  send yourself a test message
+
+// [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+import Base from '../layouts/Base.astro';
+
+// [PASTE · step 5] Ask the collection for every write-up, newest first — ask: does this run at build time or in the visitor's browser?
+import { getCollection } from 'astro:content';
+const writeups = (await getCollection('writeups')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// [TYPE · step 7] Where the contact form sends messages: your Formspree address
+const FORMSPREE = 'https://formspree.io/f/YOUR-FORM-ID';
+// [PASTE · step 7] Bring in the plain HTML contact form
+import ContactFormBasic from '../components/ContactFormBasic.astro';
+---
+<!-- step 2: everything below wrapped in the shared layout -->
+<Base title="Mira Varma, Application Security Lead">
+  <!-- [TYPE · step 1] Who Mira is: her name as the main heading, her role, and a two-sentence intro -->
+  <h1>Mira Varma</h1>
+  <p class="role">Application Security Lead, Bengaluru</p>
+  <p>I help product teams find and fix security flaws before attackers do. Twelve years in application security, from banking apps to hospital platforms.</p>
+
+  <!-- [TYPE · step 1] What she does: a heading and a list of four skills -->
+  <h2>What I do</h2>
+  <ul>
+    <li>Threat modelling for new features</li>
+    <li>Secure code reviews</li>
+    <li>Penetration testing of web and mobile apps</li>
+    <li>Incident response and post-mortems</li>
+  </ul>
+
+  <!-- [PASTE · step 5] One list item per write-up in the collection — ask: how many <li> will the browser receive? -->
+  <h2>Write-ups</h2>
+  <!-- step 6: each title wrapped in a link to its own page -->
+  <ul class="writeups">
+    {writeups.map((w) => (
+      <li>
+        <h3><a href={`${import.meta.env.BASE_URL}writeups/${w.id}/`}>{w.data.title}</a></h3>
+        <p>{w.data.summary}</p>
+      </li>
+    ))}
+  </ul>
+
+  <!-- [PASTE · step 7] The contact section, at the very bottom of the page — ask: what does the form need from the page? -->
+  <h2 id="contact">Get in touch</h2>
+  <ContactFormBasic action={FORMSPREE} />
+</Base>

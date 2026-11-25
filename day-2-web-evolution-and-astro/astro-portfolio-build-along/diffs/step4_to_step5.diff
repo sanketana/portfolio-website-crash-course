@@ -1,0 +1,75 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step4_markdown/src/content.config.ts step5_collection/src/content.config.ts
+--- step4_markdown/src/content.config.ts	1970-01-01 05:30:00.000000000 +0530
++++ step5_collection/src/content.config.ts	2026-11-25 23:30:31.132044869 +0530
+@@ -0,0 +1,18 @@
++// [PASTE · step 5] Tools for defining a collection — ask: which of the three imports does the checking?
++import { defineCollection } from 'astro:content';
++import { glob } from 'astro/loaders';
++import { z } from 'astro/zod';
++
++// [PASTE · step 5] Where the write-ups live — ask: would a .txt file in that folder become a write-up?
++const writeups = defineCollection({
++  loader: glob({ pattern: '**/*.md', base: './src/content/writeups' }),
++  // [TYPE · step 5] The shape every write-up must have: a title (text), a date, and a summary (text)
++  schema: z.object({
++    title: z.string(),
++    date: z.coerce.date(),
++    summary: z.string(),
++  }),
++});
++
++// [PASTE · step 5] Register the collection under the name the pages will use
++export const collections = { writeups };
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step4_markdown/src/layouts/Base.astro step5_collection/src/layouts/Base.astro
+--- step4_markdown/src/layouts/Base.astro	2026-11-25 23:29:56.888963453 +0530
++++ step5_collection/src/layouts/Base.astro	2026-11-25 23:30:31.144759911 +0530
+@@ -33,4 +33,10 @@
+   a { color: var(--accent); }
+   .role { color: var(--accent); font-weight: 600; margin-top: 6px; }
+   footer { text-align: center; font-size: 14px; opacity: 0.7; padding: 24px; }
++
++  /* [INVESTIGATE · step 5] Styles for the write-ups list */
++  .writeups { list-style: none; padding: 0; }
++  .writeups li { padding: 14px 0; border-bottom: 1px solid #ddd8cc; }
++  .writeups h3 { margin: 0 0 4px; }
++  .writeups p { margin: 0; }
+ </style>
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step4_markdown/src/pages/index.astro step5_collection/src/pages/index.astro
+--- step4_markdown/src/pages/index.astro	2026-11-25 23:30:18.341231735 +0530
++++ step5_collection/src/pages/index.astro	2026-11-25 23:30:31.144644406 +0530
+@@ -1,11 +1,15 @@
+ ---
+-// STEP 4 · Write-ups as Markdown files
+-// Adds:      two write-ups as Markdown files in src/content/writeups/ (one typed, one given)
+-// Ends with: fails: the files are there, but the site doesn't show them; Astro doesn't know they are content
+-// Run:       npm run dev  →  http://localhost:4321/portfolio/
++// STEP 5 · A content collection
++// Adds:      a collection with a schema, and a write-ups list on the home page built from it
++// Ends with: fails: the build stops; the schema rejects the given write-up because it has no summary
++// Run:       npm run dev  →  read the error in the terminal and the browser
+ 
+ // [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+ import Base from '../layouts/Base.astro';
++
++// [PASTE · step 5] Ask the collection for every write-up, newest first — ask: does this run at build time or in the visitor's browser?
++import { getCollection } from 'astro:content';
++const writeups = (await getCollection('writeups')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+ ---
+ <!-- step 2: everything below wrapped in the shared layout -->
+ <Base title="Mira Varma, Application Security Lead">
+@@ -22,4 +26,15 @@
+     <li>Penetration testing of web and mobile apps</li>
+     <li>Incident response and post-mortems</li>
+   </ul>
++
++  <!-- [PASTE · step 5] One list item per write-up in the collection — ask: how many <li> will the browser receive? -->
++  <h2>Write-ups</h2>
++  <ul class="writeups">
++    {writeups.map((w) => (
++      <li>
++        <h3>{w.data.title}</h3>
++        <p>{w.data.summary}</p>
++      </li>
++    ))}
++  </ul>
+ </Base>

@@ -1,0 +1,85 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step1_home/src/layouts/Base.astro step2_layout/src/layouts/Base.astro
+--- step1_home/src/layouts/Base.astro	1970-01-01 05:30:00.000000000 +0530
++++ step2_layout/src/layouts/Base.astro	2026-11-25 23:29:56.888963453 +0530
+@@ -0,0 +1,36 @@
++---
++// [PASTE · step 2] The layout takes one input from each page: its title — ask: which page passes which title?
++const { title } = Astro.props;
++---
++<!-- [INVESTIGATE · step 2] The shell every page shares — predict: what happens to the page if you delete <slot />? -->
++<html lang="en">
++  <head>
++    <meta charset="utf-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <title>{title}</title>
++  </head>
++  <body>
++    <main>
++      <slot />
++    </main>
++    <footer>Mira Varma is a fictional person, made for a Sanketana class.</footer>
++  </body>
++</html>
++
++<style is:global>
++  /* [TYPE · step 2] Mira's three colours: text, accent and background */
++  :root {
++    --ink: #10233f;
++    --accent: #0f766e;
++    --paper: #f7f6f2;
++  }
++
++  /* [INVESTIGATE · step 2] Page styles that use those colours — predict: what changes if you edit --accent? */
++  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.6 system-ui, sans-serif; }
++  main { max-width: 680px; margin: 0 auto; padding: 48px 20px; }
++  h1 { font-size: 2.6rem; line-height: 1.1; margin: 0; }
++  h2 { margin-top: 2.5rem; color: var(--accent); }
++  a { color: var(--accent); }
++  .role { color: var(--accent); font-weight: 600; margin-top: 6px; }
++  footer { text-align: center; font-size: 14px; opacity: 0.7; padding: 24px; }
++</style>
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step1_home/src/pages/index.astro step2_layout/src/pages/index.astro
+--- step1_home/src/pages/index.astro	2026-11-25 23:29:14.265732785 +0530
++++ step2_layout/src/pages/index.astro	2026-11-25 23:29:56.890745948 +0530
+@@ -1,19 +1,25 @@
+ ---
+-// STEP 1 · Home page in plain HTML
+-// Adds:      the project config and a home page written in plain HTML
+-// Ends with: works, but the tab shows no title and the page uses browser-default styling
+-// Run:       npm install && npm run dev  →  http://localhost:4321/portfolio/
++// STEP 2 · A shared layout
++// Adds:      a layout with the page <head>, a tab title, Mira's colours and styles; the home page is wrapped in it
++// Ends with: works: a styled page with a proper tab title
++// Run:       npm run dev  →  http://localhost:4321/portfolio/
++
++// [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
++import Base from '../layouts/Base.astro';
+ ---
+-<!-- [TYPE · step 1] Who Mira is: her name as the main heading, her role, and a two-sentence intro -->
+-<h1>Mira Varma</h1>
+-<p class="role">Application Security Lead, Bengaluru</p>
+-<p>I help product teams find and fix security flaws before attackers do. Twelve years in application security, from banking apps to hospital platforms.</p>
++<!-- step 2: everything below wrapped in the shared layout -->
++<Base title="Mira Varma, Application Security Lead">
++  <!-- [TYPE · step 1] Who Mira is: her name as the main heading, her role, and a two-sentence intro -->
++  <h1>Mira Varma</h1>
++  <p class="role">Application Security Lead, Bengaluru</p>
++  <p>I help product teams find and fix security flaws before attackers do. Twelve years in application security, from banking apps to hospital platforms.</p>
+ 
+-<!-- [TYPE · step 1] What she does: a heading and a list of four skills -->
+-<h2>What I do</h2>
+-<ul>
+-  <li>Threat modelling for new features</li>
+-  <li>Secure code reviews</li>
+-  <li>Penetration testing of web and mobile apps</li>
+-  <li>Incident response and post-mortems</li>
+-</ul>
++  <!-- [TYPE · step 1] What she does: a heading and a list of four skills -->
++  <h2>What I do</h2>
++  <ul>
++    <li>Threat modelling for new features</li>
++    <li>Secure code reviews</li>
++    <li>Penetration testing of web and mobile apps</li>
++    <li>Incident response and post-mortems</li>
++  </ul>
++</Base>

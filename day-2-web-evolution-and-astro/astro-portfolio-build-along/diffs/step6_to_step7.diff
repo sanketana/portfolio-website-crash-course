@@ -1,0 +1,68 @@
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step6_pages/src/components/ContactFormBasic.astro step7_form/src/components/ContactFormBasic.astro
+--- step6_pages/src/components/ContactFormBasic.astro	1970-01-01 05:30:00.000000000 +0530
++++ step7_form/src/components/ContactFormBasic.astro	2026-11-25 23:31:06.426563905 +0530
+@@ -0,0 +1,13 @@
++---
++// [PASTE · step 7] The form's address comes in from the page — ask: why pass it in instead of writing it here?
++const { action } = Astro.props;
++---
++<!-- [TYPE · step 7] A plain HTML form: name, email, message, and a Send button -->
++<form action={action} method="POST" class="contact">
++  <label>Name <input name="name" required /></label>
++  <label>Email <input type="email" name="email" required /></label>
++  <label>Message <textarea name="message" rows="4" required></textarea></label>
++  <!-- [TYPE · step 7] Spam trap: a field people never see; bots fill it in, and Formspree drops those messages -->
++  <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
++  <button type="submit">Send</button>
++</form>
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step6_pages/src/layouts/Base.astro step7_form/src/layouts/Base.astro
+--- step6_pages/src/layouts/Base.astro	2026-11-25 23:30:44.850783821 +0530
++++ step7_form/src/layouts/Base.astro	2026-11-25 23:31:06.439887387 +0530
+@@ -42,4 +42,10 @@
+ 
+   /* [INVESTIGATE · step 6] The date line on a write-up page */
+   .meta { color: #5b6475; margin-top: 6px; }
++
++  /* [INVESTIGATE · step 7] Styles for the contact form */
++  .contact { display: grid; gap: 14px; }
++  .contact label { display: grid; gap: 4px; font-weight: 600; }
++  .contact input, .contact textarea { font: inherit; padding: 10px 12px; border: 1px solid #b9c2cf; border-radius: 8px; }
++  .contact button { justify-self: start; font: inherit; font-weight: 600; padding: 10px 22px; border: 0; border-radius: 8px; background: var(--accent); color: white; cursor: pointer; }
+ </style>
+diff -ruN '--exclude=node_modules' '--exclude=dist' '--exclude=.astro' step6_pages/src/pages/index.astro step7_form/src/pages/index.astro
+--- step6_pages/src/pages/index.astro	2026-11-25 23:30:44.850675871 +0530
++++ step7_form/src/pages/index.astro	2026-11-25 23:31:06.439759106 +0530
+@@ -1,8 +1,8 @@
+ ---
+-// STEP 6 · A page for every write-up
+-// Adds:      the missing summary, one page per write-up from [id].astro, and links from the home page
+-// Ends with: ★ payoff: both write-ups listed, each with its own page, built from Markdown
+-// Run:       npm run build (look inside dist/writeups/), then git push
++// STEP 7 · A contact form in plain HTML
++// Adds:      a Formspree address and a plain HTML contact form at the bottom of the home page
++// Ends with: fails: messages send, but every visitor is taken off the site to Formspree's page
++// Run:       npm run dev  →  send yourself a test message
+ 
+ // [PASTE · step 2] Bring in the shared layout — ask: what does Base give this page that it didn't have?
+ import Base from '../layouts/Base.astro';
+@@ -10,6 +10,11 @@
+ // [PASTE · step 5] Ask the collection for every write-up, newest first — ask: does this run at build time or in the visitor's browser?
+ import { getCollection } from 'astro:content';
+ const writeups = (await getCollection('writeups')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
++
++// [TYPE · step 7] Where the contact form sends messages: your Formspree address
++const FORMSPREE = 'https://formspree.io/f/YOUR-FORM-ID';
++// [PASTE · step 7] Bring in the plain HTML contact form
++import ContactFormBasic from '../components/ContactFormBasic.astro';
+ ---
+ <!-- step 2: everything below wrapped in the shared layout -->
+ <Base title="Mira Varma, Application Security Lead">
+@@ -38,4 +43,8 @@
+       </li>
+     ))}
+   </ul>
++
++  <!-- [PASTE · step 7] The contact section, at the very bottom of the page — ask: what does the form need from the page? -->
++  <h2 id="contact">Get in touch</h2>
++  <ContactFormBasic action={FORMSPREE} />
+ </Base>
